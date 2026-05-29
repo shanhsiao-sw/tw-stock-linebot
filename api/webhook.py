@@ -70,6 +70,10 @@ def ask_ai(user_question):
         "Authorization": f"Bearer {OPENAI_API}",
     }
 
+    # Debug: 確認 API Key 有讀到
+    key_preview = OPENAI_API_KEY[:8] + "..." if OPENAI_API_KEY else "(空)"
+    print(f"[DEBUG] API Key: {key_preview}, 問題: {user_question[:50]}")
+
     # ── 方法 1：Responses API + Web Search ──
     try:
         payload = {
@@ -108,10 +112,12 @@ def ask_ai(user_question):
         if full_text.strip():
             return clean_response(full_text)
 
-    except Exception:
-        pass
-
-    # ── 方法 2：gpt-4o-search-preview ──
+    except Exception as e:
+        print(f"[方法1] Responses API 失敗: {e}")
+        try:
+            print(f"[方法1] 回應: {resp.status_code} {resp.text[:300]}")
+        except Exception:
+            pass
     try:
         payload = {
             "model": "gpt-4o-search-preview",
@@ -133,10 +139,12 @@ def ask_ai(user_question):
         if text.strip():
             return clean_response(text)
 
-    except Exception:
-        pass
-
-    # ── 方法 3：一般 gpt-4o ──
+    except Exception as e:
+        print(f"[方法2] search-preview 失敗: {e}")
+        try:
+            print(f"[方法2] 回應: {resp.status_code} {resp.text[:300]}")
+        except Exception:
+            pass
     try:
         payload = {
             "model": "gpt-4o",
@@ -158,8 +166,12 @@ def ask_ai(user_question):
         if text.strip():
             return clean_response(text)
 
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"[方法3] gpt-4o 失敗: {e}")
+        try:
+            print(f"[方法3] 回應: {resp.status_code} {resp.text[:300]}")
+        except Exception:
+            pass
 
     return "抱歉，目前 AI 暫時無法處理你的問題，請稍後再試。"
 
