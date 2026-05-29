@@ -71,7 +71,7 @@ def ask_ai(user_question):
     }
 
     # Debug: 確認 API Key 有讀到
-    key_preview = OPENAI_API_KEY[:8] + "..." if OPENAI_API_KEY else "(空)"
+    key_preview = OPENAI_API[:8] + "..." if OPENAI_API else "(空)"
     print(f"[DEBUG] API Key: {key_preview}, 問題: {user_question[:50]}")
 
     # ── 方法 1：Responses API + Web Search ──
